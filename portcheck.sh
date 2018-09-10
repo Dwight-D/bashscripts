@@ -1,15 +1,11 @@
 #!/bin/bash
+#Script for checking port connectivity. Provide CSV in format IP;PORT...
+#Results output as csv
 
 timeout=1
 input_file=$1
 tmp_file='tmp.txt'
-#delimiter must be set inside loops as well if want to change
-delim=';'
 output_file='results.txt'
-
-test_func(){
-  echo $1 $2
-}
 
 check_port(){
   nc -zv -w $timeout $1 $2
@@ -18,20 +14,19 @@ check_port(){
 
 check_all_ports(){
   #set delimiter
-
-  IFS=$delim
+  IFS=';'
   #split into ip and ports
   while read ip portstr; do
     #split ports by space into array
     if [ $(wc -w <<< $ip ) -gt 0 ]
     then
+      #read ports into array and iterate
       read -ra ports <<< $portstr
-      #iterate over ports array
       for port in "${ports[@]}"; do
-        #check if i contains a word
-
+        #check if port contains a word, else string is garbage
         if [ $(wc -w <<< $port ) -gt 0 ]; then
           echo -n $ip';'$port';' >> $output_file
+          #check port connectivity and write results
           check_port $ip $port
           if (( $? == 0 )); then
             echo yes >> $output_file
@@ -45,16 +40,22 @@ check_all_ports(){
   done < $tmp_file
 }
 
-if [ ! -f "$input_file" ]
+if (( $# != 1 )); then
+  echo "Usage: portcheck INPUT_FILE"
+  exit 1
+elif [ ! -f "$input_file" ]
   then echo "Error reading file "$input_file
+  exit 1
 else
-  #trim windows-style newlines
+  #trim windows-style newlines into temp working file
   cat $input_file | tr -d '\r' > $tmp_file
+  #Set column descriptors
   echo IP${delim}PORT${delim}REACHABLE? > $output_file
   check_all_ports
   #delete temp file after
   rm $tmp_file
 fi
+exit 0
 
 #var1=$1
 #var2=$2
