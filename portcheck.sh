@@ -1,8 +1,9 @@
 #!/bin/bash
 #Script for checking port connectivity. Provide CSV in format IP;PORT...
 #Results output as csv
+#Depends on netcat, openbsd-netcat package recommended
 
-timeout=1
+timeout=3
 input_file=$1
 tmp_file='tmp.txt'
 output_file='results.txt'
@@ -50,15 +51,9 @@ else
   #trim windows-style newlines into temp working file
   cat $input_file | tr -d '\r' > $tmp_file
   #Set column descriptors
-  echo IP${delim}PORT${delim}REACHABLE? > $output_file
+  echo 'IP;PORT;REACHABLE?' > $output_file
   check_all_ports
   #delete temp file after
   rm $tmp_file
 fi
 exit 0
-
-#var1=$1
-#var2=$2
-#check_ports $var1 $var2
-#output=$?
-#exit $output
