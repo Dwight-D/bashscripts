@@ -8,7 +8,7 @@ function __prompt
 
     # Base prompt
     #PS1="$COL13\u $COL15 @ $COL9 \W\n$COL5>$COL_RESET "
-    PS1="$COL13\u $COL5 / $COL15 \W\n$COL5>$COL8 "
+    PS1="$COL13\u $COL15 / $COL5 \W\n$COL5>$COL8 "
     trap 'echo -ne "\e[0m" ' DEBUG
     local dirty
     local branch
