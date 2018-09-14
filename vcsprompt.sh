@@ -6,16 +6,20 @@
 function __prompt
 {
 
-    # Base prompt
-    #PS1="$COL13\u $COL15 @ $COL9 \W\n$COL5>$COL_RESET "
+    # Base prompt, display user / pwd \n >
+    # and outputs commands in different color than output
     PS1="$COL13\u $COL15 / $COL5 \W\n$COL5>$COL8 "
+    #Trap debug signal and send color restore
+    #which reverts the terminal color before output
     trap 'echo -ne "\e[0m" ' DEBUG
+    
     local dirty
     local branch
 
     # Look for Git status
     if git status &>/dev/null; then
-        if git status -uno -s | grep -q . ; then
+        #if uncommited changes, set dirty
+	if git status -uno -s | grep -q . ; then
             dirty=1
         fi
         branch=$(git branch --color=never | sed -ne 's/* //p')
@@ -35,11 +39,11 @@ function __prompt
             fi
             dirty=$(svn status -q)
         fi
-    fi
-
+    fi	
     if [[ ! -z "$branch" ]]; then
         local status_color
-        if [[ -z "$dirty" ]] ; then
+        #if dirty set bold color, else set normal
+	if [[ -z "$dirty" ]] ; then
             status_color=$COL4
 	
         else
