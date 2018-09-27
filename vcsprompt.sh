@@ -8,11 +8,11 @@ function __prompt
 
     # Base prompt, display user / pwd \n >
     # and outputs commands in different color than output
-    PS1="$COL13\u $COL15 / $COL5 \W\n$COL5>$COL8 "
+    PS1="$COL13\u $COL15 - $COL5 \w\n$COL5>$COL8 "
     #Trap debug signal and send color restore
     #which reverts the terminal color before output
     trap 'echo -ne "\e[0m" ' DEBUG
-    
+
     local dirty
     local branch
 
@@ -39,15 +39,14 @@ function __prompt
             fi
             dirty=$(svn status -q)
         fi
-    fi	
+    fi
     if [[ ! -z "$branch" ]]; then
         local status_color
         #if dirty set bold color, else set normal
-	if [[ -z "$dirty" ]] ; then
+	      if [[ -z "$dirty" ]] ; then
             status_color=$COL4
-	
         else
-            status_color=$COL3
+            status_color=$COL13
         fi
         PS1="$COL15($status_color$branch$COL15)$RESET $PS1"
     fi
