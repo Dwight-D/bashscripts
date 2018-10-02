@@ -5,6 +5,9 @@ oldterm=$TERM
 term="default"
 agent=true
 addr=""
+arg=""
+#List of allowed arguments
+allowed="xna:t:"
 
 usage (){
     echo "Usage: $0 [-x] host"
@@ -15,13 +18,26 @@ args (){
 
     #Parse arguments
     local OPTIND xn opt
-    while getopts ":xn" opt; do
+    while getopts $allowed opt; do
         case ${opt} in
             x )
                 term=xterm
                 ;;
             n )
                 agent=false
+                ;;
+
+            #Pass additional arguments to SSH (ex: -a "-L 10320:localhost:3200")
+            a )
+                arg=$OPTARG
+                ;;
+
+            #Sets up SSH tunnel from local port X to remote target port Y
+            #Usage: -t X:Y 
+            t )
+                lcl=$(cut -d ":" -f 1 <<< "$OPTARG")
+                rmt=$(cut -d ":" -f 2 <<< "$OPTARG")
+                arg="-L $lcl:localhost:$rmt"
                 ;;
             \? )
                 usage
@@ -58,7 +74,7 @@ case ${term} in
             echo "Setting term to rxvt-unicode"
         fi
         
-        ssh $addr
+        ssh $arg $addr
 
         #Restore term var after
         TERM=$oldterm
