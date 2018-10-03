@@ -13,17 +13,18 @@ if [ $# -eq 0 ]; then
     usage
 fi
 
-while getopts "ce" opt; do
+while getopts "ca:" opt; do
     case $opt in
         #Current / created time
         c )
             time=$(date +%T)
             ;;
         #Execution time, +1 HR
-        e )
-            time=$(expr $(date +%H) + 1)
-            if [ "$time" -eq "24" ]; then
-                time="0"
+        a )
+            time=$(expr $(date +%H) + $OPTARG)
+            if [ "$time" -ge "24" ]; then
+                echo "Invalid option, next day not supported"
+                exit 1
             fi
             time=0$time:$(date +%M:%S)
             ;;
