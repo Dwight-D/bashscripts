@@ -20,11 +20,12 @@ file=$3
 if [ $# -lt 2 ]; then
     usage
 fi
-
+#Set IFS to avoid consuming whitespace
+IFS=
 while read line
 do
     str=$(sed "s/<${tag}>.*${tag}>/<${tag}>$content<\/${tag}>/" <<<$line)
     echo $str 
 
-#    sed $sed_string line
+#Reads from file if defined, otherwise redireects to stdin
 done < "${file:-/dev/stdin}"

@@ -5,6 +5,9 @@
 
 file1=$1
 file2=$2
+out1=$1.out
+out2=$2.out
+
 common="common.txt"
 
 if [ $# -ne 2 ]; then
@@ -17,6 +20,8 @@ comm -12 \
     <(tr -s ' ' <$file2 | cut -f "9" -d " " | sort)\
     >$common
 
-grep -f $common $file1 | tr -s ' ' | cut -f "1,3,4,9" -d " " >${file1}.out
+grep -f $common $file1 | tr -s ' ' | cut -f "1,3,4,9" -d " " >$out1
 
-grep -f $common $file2 | tr -s ' ' | cut -f "1,3,4,9" -d " " >${file2}.out
+grep -f $common $file2 | tr -s ' ' | cut -f "1,3,4,9" -d " " >$out2
+
+echo $out1 $out2
