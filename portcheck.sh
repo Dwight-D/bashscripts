@@ -75,7 +75,6 @@ done < $tmp_file
 #Script begin
 #=================================================
 
-echo $@
 while getopts "iat:" opt; do
     case  $opt in
         i )
