@@ -1,5 +1,7 @@
 #!/bin/bash
-#Script for checking port connectivity. Provide CSV in format COMMENT;IP;PORT...
+#Author: Max Forsman
+
+#Script for checking port connectivity. Provide CSV in format COMMENT;ALIAS;IP;PORT...;PORT
 #Results output as csv
 #Depends on netcat, openbsd-netcat package recommended
 #NB: Avoid usage of semicolons in input csv (obviously)
@@ -8,6 +10,25 @@ timeout=3
 tmp_file='tmp.txt'
 output_file='results.csv'
 method="ip"
+
+usage (){
+    echo ""
+    echo "$(basename $0):"
+    echo "Utility script for checking port connectivity"
+    echo "Output saved in results.csv"
+    echo ""
+    echo "Usage:"
+    echo "$(basename $0) [-i] [-a] [-t X] path"
+    echo "where 'path' leads to a csv file in the format"
+    echo " \"name ; alias ; ip ; port [; port ; ... ; port]\" "
+    echo ""
+    echo "Options:"
+    echo -e "\t -h      Display help"
+    echo -e "\t -i      Set connection method to IP"
+    echo -e "\t -a      Set connection method to alias/DNS-name"
+    echo -e "\t -t X    Set timeout to X seconds"
+    exit 1
+}
 
 check_port(){
     nc -zv -w $timeout $1 $2
@@ -66,6 +87,15 @@ while getopts "iat:" opt; do
         t )
             timeout="$OPTARG"
             ;;
+        h )
+            usage
+            ;;
+
+        \? )
+            echo "Invalid option: $OPTARG"
+            usage
+            ;;
+
     esac
 done
 shift $((OPTIND-1))
@@ -73,8 +103,8 @@ shift $((OPTIND-1))
 input_file=$1
 
 if [ ! -f "$input_file" ];then 
-    echo "Error reading file "$input_file
-    exit 1
+    echo "Error reading or no input file specified "$input_file
+    usage
 fi    
 
 #trim windows-style newlines into temp working file
