@@ -11,6 +11,16 @@ tmp_file='tmp.txt'
 output_file='results.csv'
 method="ip"
 
+#   Function definitions
+#========================================================
+
+#Perform cleanup on interrupt
+trap ctrl_c INT
+function ctrl_c() {
+    rm $tmp_file
+    exit 1
+}
+
 usage (){
     echo ""
     echo "$(basename $0):"
@@ -34,7 +44,6 @@ check_port(){
     nc -zv -w $timeout $1 $2
     return $?
 }
-
 
 check_all_ports(){
     #set delimiter
@@ -72,8 +81,9 @@ fi
 done < $tmp_file
 }
 
-#Script begin
-#=================================================
+#Parse options
+#===============================================
+
 
 while getopts "iat:" opt; do
     case  $opt in
@@ -99,6 +109,9 @@ while getopts "iat:" opt; do
 done
 shift $((OPTIND-1))
 
+
+#Script begin
+#=================================================
 input_file=$1
 
 if [ ! -f "$input_file" ];then 
