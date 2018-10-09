@@ -1,13 +1,20 @@
 #!/bin/bash
 #Author: Max Forsman, max.forsman@tieto.com
+
 #Script for cleaning up logs
+#Function:
+#Goes through a list of directories and searches for log files (.out, .log) over a 
+#certain age. Deletes old log files and outputs a list of unrecognized old files to stderr
+
 #Instructions:
 #Call script with argument pointing to a file with a list of all folders you want to check, ex
 #"/opt/app/somelogs
 #/opt/sys/otherlogs
 #/app/etc..."
 
-#TODO: Add support for different file formats
+#TODO: 
+#Add support for different file formats
+#Add ignore list
 
 
 base=$(readlink -f $(dirname $BASH_SOURCE))
