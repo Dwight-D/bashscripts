@@ -1,0 +1,42 @@
+#!/bin/bash
+
+program=""
+keyword=""
+context=10
+
+
+usage (){
+
+    echo "Usage: $(basename $0) program keyword"
+    exit 1
+}
+
+while getopts "c:" opt; do
+    case $opt in
+        c )
+            context=$OPTARG
+            ;;
+        ? )
+            usage
+            ;;
+        : )
+            echo "Option requires argument: $opt"
+            usage
+            ;;
+
+     esac
+done
+shift $((OPTIND-1))
+
+#Searches manpage with context
+if [ "$#" -lt 2 ]; then
+    usage
+fi
+
+
+program="$1"
+keyword="$2"
+
+keyword=${keyword/'-'/'\-'}
+
+man $program | grep --color=auto -B $context -A $context "$keyword"

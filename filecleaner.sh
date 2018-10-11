@@ -92,8 +92,6 @@ if [ ${#extensions[@]} -eq 0 ]; then
 fi
 
 prep_regex
-echo $regexp
-
 
 if [ "$debug" = true ]; then
     echo "Debug mode enabled, no files will be deleted"
@@ -119,11 +117,11 @@ while read -r dir; do
     echo "Cleaning up $dir"
 
     #Find files older than maxage
-    old=$(find "$dir" -mtime -${maxage} -type f)
+    old=$(find "$dir" -mtime +${maxage} -type f)
 
     #Look for files with provided extensions
     hitlist=$(grep -E "$regexp" <<< "$old")
-    if [ ! -z $hitlist ]; then
+    if [ ! -z "$hitlist" ]; then
         echo "Removing: "
     fi
     echo "$hitlist"
