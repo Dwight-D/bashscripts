@@ -3,18 +3,27 @@
 program=""
 keyword=""
 context=10
-
+search_help=false
 
 usage (){
 
-    echo "Usage: $(basename $0) program keyword"
+    echo "Usage: $(basename $0) [-h] [-c X] program keyword"
+    echo -e "Options
+\t-h\tSearch help options rather than manpage
+\th-c X\t Provide X lines of context"
     exit 1
 }
 
-while getopts "c:" opt; do
+#oneshot for printing one entire screen of '='
+repl() { printf "$1"'%.s' $(eval "echo {1.."$(($2))"}"); }
+
+while getopts "hc:" opt; do
     case $opt in
         c )
             context=$OPTARG
+            ;;
+        h )
+            search_help=true
             ;;
         ? )
             usage
@@ -28,6 +37,11 @@ while getopts "c:" opt; do
 done
 shift $((OPTIND-1))
 
+#save separator string
+separator="$(repl = $(tput cols))"
+
+
+
 #Searches manpage with context
 if [ "$#" -lt 2 ]; then
     usage
@@ -39,4 +53,13 @@ keyword="$2"
 
 keyword=${keyword/'-'/'\-'}
 
-man $program | grep --color=auto -B $context -A $context "$keyword"
+helptext=
+
+if [ "$search_help" = true ]; then
+    helptext=$($program --help)
+else
+    helptext=$(man $program)
+fi
+
+grep --color=auto --group-separator=$separator -B $context -A $context "$keyword" <<< "$helptext"
+

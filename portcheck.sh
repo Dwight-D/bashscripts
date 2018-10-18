@@ -58,7 +58,7 @@ check_all_ports(){
             for port in "${ports[@]}"; do
                 #check if port contains a word, else string is garbage
                 if [ $(wc -w <<< $port ) -gt 0 ]; then
-                    echo -n $comment';i'$alias';'$ip';'$port';' >> $output_file
+                    echo -n $comment';'$alias';'$ip';'$port';' >> $output_file
                     case $method in
                         ip )
                             check_port $ip $port

@@ -6,20 +6,27 @@ term="default"
 agent=true
 addr=""
 arg=""
+ssh="backpack"
 #List of allowed arguments
 
 usage (){
     echo "Usage: $0 [-x] host"
+    echo "Options:"
+    echo -e "\t-x   set term to xterm"
+    echo -e "\t-n   dont save authentication with ssh agent"
+    echo -e "\t-a   pass additional argumens to SSH"
+    echo -e "\t-t X Y Set up a tunnel between ports local X and remote Y"
+    echo -e "\t-s   Use ssh instead of backpack"
+
     exit 1
 }
 
 set_agent (){
-    echo "Setting up SSH agent"
     eval $(keychain --eval --quiet --agents ssh id_rsa)>/dev/null
 }
 
 #Parse arguments
-allowed="xna:t:"
+allowed="xsna:t:"
 while getopts $allowed opt; do
     case ${opt} in
         x )
@@ -29,17 +36,23 @@ while getopts $allowed opt; do
             agent=false
             ;;
 
-            #Pass additional arguments to SSH (ex: -a "-L 10320:localhost:3200")
-            a )
+        #Pass additional arguments to SSH (ex: -a "-L 10320:localhost:3200")
+        a )
             arg=$OPTARG
             ;;
 
             #Sets up SSH tunnel from local port X to remote target port Y
             #Usage: -t X:Y 
-            t )
+        t )
             lcl=$(cut -d ":" -f 1 <<< "$OPTARG")
             rmt=$(cut -d ":" -f 2 <<< "$OPTARG")
             arg="-L $lcl:localhost:$rmt"
+            ;;
+        s )
+            ssh="ssh"
+            ;;
+        h )
+            usage
             ;;
         \? )
             usage
@@ -61,24 +74,21 @@ if [ $agent = true ]; then
     #eval $(keychain --eval --quiet --agents ssh id_rsa)>/dev/null
     set_agent
 fi
-echo "Attempting to connect to $addr over terminal $term"
 
 case ${term} in
     xterm )
-        nohup xterm -e ssh -a $addr &>/dev/null &
+        nohup xterm -e $ssh -a $addr &>/dev/null &
         ;;
     default )
         #Change to more recognizeable terminal
         if [ "$TERM" = "rxvt-unicode-256color" ]; then
             TERM="rxvt-unicode"
             export TERM
-            echo "Setting term to rxvt-unicode"
         fi
 
-        ssh $arg $addr
+        $ssh $arg $addr
 
         #Restore term var after
         TERM=$oldterm
-        echo Restoring term to $TERM
         ;;
 esac

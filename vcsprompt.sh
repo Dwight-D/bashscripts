@@ -9,6 +9,7 @@ function __prompt
     # Base prompt, display user / pwd \n >
     # and outputs commands in different color than output
     PS1="$COL13\u $COL15 - $COL5 \w\n$COL5>$COL8 "
+    
     #Trap debug signal and send color restore
     #which reverts the terminal color before output
     trap 'echo -ne "\e[0m" ' DEBUG
