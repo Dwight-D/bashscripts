@@ -8,16 +8,18 @@ file=""
 str=""
 output=""
 attribute=""
+temp=""
 
 usage (){
-    echo "Usage: $0 tag content [file]"
+    echo "Usage: $0 [-a] tag content [file]"
+    echo -e "\t [-a attributeName]\t Edits attribute content instead of regular node content"
     exit 1
 }
 
-while getopts "a" opt; do
+while getopts "a:" opt; do
     case $opt in
         a )
-            attribute=true
+            attribute="$OPTARG"
             ;;
         h )
             usage
@@ -35,23 +37,28 @@ shift $((OPTIND -1))
 
 tag="$1"
 content="$2"
-
-if [ "$attribute" = true ]; then
-    attribute="$3"
-    shift
-fi
 file="$3"
 
 if [ $# -lt 2 ]; then
     usage
 fi
+
+if [ ! -z "$file" ]; then
+    if [ -f "$file" ]; then
+        cp "$file" "${file}.tmp"
+       temp="${file}.tmp"
+    else
+        echo "Bad file!"
+    fi
+fi
+
 #Set IFS to avoid consuming whitespace
 IFS=
 while read line
 do
     if [ ! -z "$attribute" ]; then
         #Look for tag, if present then replace attribute with sed
-        str=$(grep "<${tag}" <<<$line | sed "s/${content}=\"[^\"]*\"/${content}=\"${attribute}\"/")
+        str=$(grep "<${tag}" <<<$line | sed "s/${attribute}=\"[^\"]*\"/${attribute}=\"${content}\"/")
         #If no match
         if [ -z "$str" ]; then
             str="$line"
