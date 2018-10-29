@@ -7,6 +7,7 @@ agent=true
 addr=""
 arg=""
 ssh="backpack"
+
 #List of allowed arguments
 
 usage (){
@@ -67,7 +68,9 @@ if [ ! -n "$1" ]; then
     exit
 else
     addr=$1
+    shift
 fi
+
 #Store and forward login credentials
 if [ $agent = true ]; then
     #Set up storing of SSH authentication using keychain
@@ -86,7 +89,7 @@ case ${term} in
             export TERM
         fi
 
-        $ssh $arg $addr
+        $ssh $arg $addr $@
 
         #Restore term var after
         TERM=$oldterm

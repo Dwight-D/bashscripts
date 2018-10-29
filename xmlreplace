@@ -7,15 +7,40 @@ content=""
 file=""
 str=""
 output=""
+attribute=""
 
 usage (){
     echo "Usage: $0 tag content [file]"
     exit 1
 }
 
-tag=$1
-content=$2
-file=$3
+while getopts "a" opt; do
+    case $opt in
+        a )
+            attribute=true
+            ;;
+        h )
+            usage
+            ;;
+        ? )
+            usage
+            ;;
+        : )
+            echo "Option requires an argument: $OPTARG"
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND -1))
+
+tag="$1"
+content="$2"
+
+if [ "$attribute" = true ]; then
+    attribute="$3"
+    shift
+fi
+file="$3"
 
 if [ $# -lt 2 ]; then
     usage
@@ -24,7 +49,16 @@ fi
 IFS=
 while read line
 do
-    str=$(sed "s/<${tag}>.*${tag}>/<${tag}>$content<\/${tag}>/" <<<$line)
+    if [ ! -z "$attribute" ]; then
+        #Look for tag, if present then replace attribute with sed
+        str=$(grep "<${tag}" <<<$line | sed "s/${content}=\"[^\"]*\"/${content}=\"${attribute}\"/")
+        #If no match
+        if [ -z "$str" ]; then
+            str="$line"
+        fi
+    else
+        str=$(sed "s/<${tag}>.*${tag}>/<${tag}>$content<\/${tag}>/" <<<$line)
+    fi
     echo $str 
 
 #Reads from file if defined, otherwise redireects to stdin
