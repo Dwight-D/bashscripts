@@ -46,12 +46,12 @@ if [ "$#" -lt 2 ]; then
 fi
 
 host="$1"
-target_dir="$2"
+dir=$(dirname "$2")
+path=$(basename "$2")
 dest="$3"
-tarname="$(basename $target_dir).grab.tar"
+tarname="$path.grab.tar"
 tar_path="/tmp/$tarname"
 haul=""
-
 
 if [ "$debug" = false ]; then
     exec 2>/dev/null
@@ -64,9 +64,9 @@ Smashing"
 if [ "$_sudo" = true ]; then
     read -s -p "Password?
 " pass
-    haul=$(ssh -t $host "echo $pass | sudo -S tar -cvaf $tar_path $target_dir | grep -E '^/'; sudo chmod 644 $tar_path && sudo chown \$(whoami) $tar_path") 1>&2
+    haul=$(ssh -t $host "echo $pass | sudo -S tar -C $dir -cvaf $tar_path $path | grep -E ^$path; sudo chmod 644 $tar_path && sudo chown \$(whoami) $tar_path") 1>&2
 else
-    haul=$(ssh -t $host tar -cvaf $tar_path $target_dir | grep -E '^/'; chmod 644 $tar_path) 1>&2
+    haul=$(ssh -t $host tar -C $dir -cvaf $tar_path $path | grep -E ^$path; chmod 644 $tar_path) 1>&2
 fi
 
 echo "Grabbing"
