@@ -1,10 +1,7 @@
 #!/bin/bash
-#Author: Max Forsman
-
 #Script for checking port connectivity. Provide CSV in format COMMENT;ALIAS;IP;PORT...;PORT
 #Results output as csv
 #Depends on netcat, openbsd-netcat package recommended
-#NB: Avoid usage of semicolons in input csv (obviously)
 
 timeout=3
 tmp_file='tmp.txt'

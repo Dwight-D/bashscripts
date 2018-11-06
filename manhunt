@@ -6,8 +6,9 @@ context=10
 search_help=false
 
 usage (){
-
-    echo "Usage: $(basename $0) [-h] [-c X] program keyword"
+    echo ${0##*/}
+    echo "${0##*/}: Searches manpage for keyword"
+    echo "Usage: ${0##*/} [-h] [-c X] program keyword"
     echo -e "Options
 \t-h\tSearch help options rather than manpage
 \th-c X\t Provide X lines of context"

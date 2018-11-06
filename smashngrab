@@ -8,8 +8,8 @@ _sudo=false
 debug=false
 
 usage (){
-    echo "basename $0: Copies a file/directory from a remote server and saves as a tar archive."
-    echo "Usage: $(basename $0) host src [dest]"
+    echo "${0##*/}: Copies a file/directory from a remote server and saves as a tar archive."
+    echo "Usage: ${0##*/} host src [dest]"
     echo -e "\t-d\tdebug mode"
     echo -e "\t-s\tRemote sudo mode, prompts for password"
     exit 1
