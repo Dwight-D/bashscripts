@@ -8,7 +8,7 @@ function __prompt
 
     # Base prompt, display user / pwd \n >
     # and outputs commands in different color than output
-    PS1="$COL13\u $COL15 - $COL5 \w\n$COL5>$COL8 "
+    PS1="$COL1B\u $COL7 - $COL6B \w\n$COL1B>$COL2B "
     
     #Trap debug signal and send color restore
     #which reverts the terminal color before output

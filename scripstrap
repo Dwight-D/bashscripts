@@ -16,7 +16,7 @@ usage (){
 #       Parse options
 #=============================
 
-while getopts "o" opt; do
+while getopts "oh" opt; do
     case $opt in
         h )
             usage
@@ -124,4 +124,4 @@ echo "$args ]; then
 fi
 "
 }> $name
-
+$EDITOR $name

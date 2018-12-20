@@ -16,7 +16,7 @@ usage (){
     echo -e "\t-x   set term to xterm"
     echo -e "\t-n   dont save authentication with ssh agent"
     echo -e "\t-a   pass additional argumens to SSH"
-    echo -e "\t-t X Y Set up a tunnel between ports local X and remote Y"
+    echo -e "\t-t X:Y Set up a tunnel between ports local X and remote Y"
     echo -e "\t-s   Use ssh instead of backpack"
 
     exit 1
