@@ -2,3 +2,6 @@ logcleaner.sh
 docker
 git
 backpack
+xdeploy
+addremotes.sh
+checkout.sh

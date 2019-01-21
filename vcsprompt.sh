@@ -52,7 +52,7 @@ function __prompt
         PS1="$COL15($status_color$branch$COL15)$RESET $PS1"
     fi
 }
-
+PS1="\n$PS1"
 if [[ -z "$PROMPT_COMMAND" ]]; then
     PROMPT_COMMAND=__prompt
 else
