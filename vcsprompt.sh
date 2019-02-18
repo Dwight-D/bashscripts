@@ -3,12 +3,22 @@
 # Adapted from from https://github.com/hoelzro/bashrc/blob/master/colors.sh
 # Color variables set in .bashrc
 
+prompt="$COL1B\u $COL7 - $COL6B \w\n$COL1B>$COL2B "
+
+
+
 function __prompt
 {
 
     # Base prompt, display user / pwd \n >
     # and outputs commands in different color than output
-    PS1="$COL1B\u $COL7 - $COL6B \w\n$COL1B>$COL2B "
+    if [ ! -z "$VIRTUAL_ENV" ]; then
+        venv=$(basename $VIRTUAL_ENV)
+        PS1="($venv) "
+    else
+        PS1=""
+    fi
+    PS1+="$prompt"
     
     #Trap debug signal and send color restore
     #which reverts the terminal color before output
