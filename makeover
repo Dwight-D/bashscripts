@@ -32,4 +32,4 @@ while getopts "h" opt; do
 done
 shift $((OPTIND -1))
 
-wal -i $(artthief -c) -a 75 --backend=colorz
+wal -i $(artthief -c -d /home/max/pictures/artthief) -a 75 --backend=colorz

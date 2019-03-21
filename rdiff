@@ -8,7 +8,7 @@ me=${0##*/}
 file="$1"
 host1="$2"
 host2="$3"
-ssh=initssh
+ssh=ssh
 
 
 usage (){

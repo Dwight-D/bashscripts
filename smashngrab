@@ -56,7 +56,7 @@ host="$1"
 dir=$(dirname "$2")
 path=$(basename "$2")
 dest="$3"
-tarname="$path.grab.tar"
+tarname="$path.grab.tar.gz"
 tar_path="/tmp/$tarname"
 haul=""
 
@@ -79,9 +79,9 @@ Smashing"
 
 #If sudo specified, prompt for password
 if [ "$_sudo" = true ]; then
-    haul=$(ssh -t $host "echo $pass | sudo -S tar -C $dir -cvaf $tar_path $path | grep -E ^$path; sudo chmod 644 $tar_path && sudo chown \$(whoami) $tar_path") 1>&2
+    haul=$(ssh -t $host "echo $pass | sudo -S tar -C $dir -cvzaf $tar_path $path | grep -E ^$path; sudo chmod 644 $tar_path && sudo chown \$(whoami) $tar_path") 1>&2
 else
-    haul=$(ssh -t $host tar -C $dir -cvaf $tar_path $path | grep -E ^$path; chmod 644 $tar_path) 1>&2
+    haul=$(ssh -t $host tar -C $dir -cvzaf $tar_path $path | grep -E ^$path; chmod 644 $tar_path) 1>&2
 fi
 
 echo "Grabbing"
