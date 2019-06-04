@@ -54,12 +54,12 @@ function __prompt
     if [[ ! -z "$branch" ]]; then
         local status_color
         #if dirty set bold color, else set normal
-	      if [[ -z "$dirty" ]] ; then
+        if [[ -z "$dirty" ]] ; then
             status_color=$COL4
         else
             status_color=$COL13
         fi
-        PS1="$COL15($status_color$branch$COL15)$RESET $PS1"
+        PS1="$COL7($status_color$branch$COL7)$RESET $PS1"
     fi
 }
 PS1="\n$PS1"
