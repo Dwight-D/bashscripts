@@ -11,7 +11,7 @@ usage (){
     echo "Usage: ${0##*/} [-h] [-c X] program keyword"
     echo -e "Options
 \t-h\tSearch help options rather than manpage
-\th-c X\t Provide X lines of context"
+\t-c X\t Provide X lines of context"
     exit 1
 }
 
@@ -62,5 +62,5 @@ else
     helptext=$(man $program)
 fi
 
-grep --color=auto --group-separator=$separator -B $context -A $context "$keyword" <<< "$helptext"
+ggrep --color=auto --group-separator $separator -B $context -A $context "$keyword" <<< "$helptext"
 
