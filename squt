@@ -9,8 +9,9 @@ fields=""
 delimiter=' '
 
 usage (){
-    echo "$me - Squeeze and cut fields from stdin"
-    echo "Usage: $me fields"
+    echo "$me - Squeeze repeated chars and cut fields from stdin"
+    echo "Usage: $me fields [-d delimChar=' ']"
+    echo -e "\nExample: echo '1    skip 3' | squt 1,3"
     exit 1
 }
 
